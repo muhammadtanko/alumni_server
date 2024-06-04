@@ -74,5 +74,20 @@ module.exports = () => {
         }
     });
 
+
+    api.delete("/:id", async (req, res) => {
+        try {
+            const id = req.params.id;
+            const { ok, data, message } = await classController.deleteClass(id);
+            if (ok) {
+                res.status(200).json({ ok, data });
+            } else {
+                res.status(404).json({ ok, message });
+            }
+        } catch (error) {
+            res.status(500).json({ ok: false, message: error.message });
+        }
+    });
+
     return api;
 };

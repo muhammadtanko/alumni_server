@@ -1,15 +1,46 @@
+const handleImgUpload = require("../middleWares/upload.middleware")
 const userController = require("../controllers/user.controller");
 const { Router } = require("express");
 
 module.exports = () => {
     const api = Router();
 
-    api.post("/", async (req, res) => {
+    api.post("/", handleImgUpload, async (req, res) => {
         try {
             const body = req.body;
-            const { ok, data, message } = await userController.registerUser(body);
+            body.file = req.filePaths;
+            const { ok, payLoad, message } = await userController.registerUser(body);
             if (ok) {
-                res.status(201).json({ ok, data });
+                res.status(201).json({ ok, payLoad });
+            } else {
+                res.status(500).json({ ok, message });
+            }
+        } catch (error) {
+            res.status(500).json({ ok: false, message: error.message });
+        }
+    });
+
+    api.post("/login", async (req, res) => {
+        try {
+            const { email, password } = req.body;
+            const { ok, payLoad, message, customMessage } = await userController.loginUser({ email, password });
+
+            if (ok) {
+                res.status(201).json({ ok, payLoad, customMessage });
+            } else {
+                res.status(500).json({ ok, message, customMessage });
+            }
+        } catch (error) {
+            res.status(500).json({ ok: false, message: error.message });
+        }
+    });
+
+    api.put("/approve/:id", async (req, res) => {
+        try {
+            const { id } = req.params
+            const { ok, payLoad, message } = await userController.approveUser(id)
+            if (ok) {
+                res.status(200).json({ ok, payLoad });
             } else {
                 res.status(500).json({ ok, message });
             }
@@ -21,11 +52,11 @@ module.exports = () => {
     api.get("/:id", async (req, res) => {
         try {
             const id = req.params.id;
-            const { ok, data, message } = await userController.getUser(id);
+            const { ok, payLoad, message } = await userController.getUser(id);
             if (ok) {
-                res.status(200).json({ ok, data });
+                res.status(200).json({ ok, payLoad });
             } else {
-                res.status(404).json({ ok, message });
+                res.status(500).json({ ok, message });
             }
         } catch (error) {
             res.status(500).json({ ok: false, message: error.message });
@@ -34,9 +65,9 @@ module.exports = () => {
 
     api.get("/", async (req, res) => {
         try {
-            const { ok, data, message } = await userController.getUsers();
+            const { ok, payLoad, message } = await userController.getUsers();
             if (ok) {
-                res.status(200).json({ ok, data });
+                res.status(200).json({ ok, payLoad });
             } else {
                 res.status(500).json({ ok, message });
             }
@@ -49,11 +80,11 @@ module.exports = () => {
         try {
             const id = req.params.id;
             const body = req.body;
-            const { ok, data, message } = await userController.updateUser(id, body);
+            const { ok, payLoad, message } = await userController.updateUser(id, body);
             if (ok) {
-                res.status(200).json({ ok, data });
+                res.status(200).json({ ok, payLoad });
             } else {
-                res.status(404).json({ ok, message });
+                res.status(500).json({ ok, message });
             }
         } catch (error) {
             res.status(500).json({ ok: false, message: error.message });
@@ -63,11 +94,11 @@ module.exports = () => {
     api.delete("/:id", async (req, res) => {
         try {
             const id = req.params.id;
-            const { ok, data, message } = await userController.deleteUser(id);
+            const { ok, payLoad, message } = await userController.deleteUser(id);
             if (ok) {
-                res.status(200).json({ ok, data });
+                res.status(200).json({ ok, payLoad });
             } else {
-                res.status(404).json({ ok, message });
+                res.status(500).json({ ok, message });
             }
         } catch (error) {
             res.status(500).json({ ok: false, message: error.message });

@@ -60,6 +60,16 @@ class ClassController {
 
     }
 
+    async deleteClass(id) {
+        try {
+            const deletedClass = await classModel.findByIdAndDelete(id);
+            return { ok: true, data: "deleted" }
+        } catch (error) {
+            return { ok: false, message: error.message };
+        }
+
+    }
+    
 
 }
 
