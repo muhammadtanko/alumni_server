@@ -25,7 +25,6 @@ module.exports = () => {
             const body = req.body;
             body.file = req.filePaths;
             const { ok, payLoad, message } = await userController.onBoardUser(id, body);
-            console.log({ ok, payLoad, message });
             
             if (ok) {
                 res.status(201).json({ ok, payLoad,message });
