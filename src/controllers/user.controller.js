@@ -40,7 +40,7 @@ class UserController {
                         fieldOfStudy: data.fieldOfStudy,
                         profession: data.profession,
                         businessVentures: data.businessVentures,
-                        registrationStatus:"registrationStatus"
+                        registrationStatus:"complete"
                     }
                 },
                 { new: true });
