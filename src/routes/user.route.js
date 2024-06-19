@@ -5,13 +5,30 @@ const { Router } = require("express");
 module.exports = () => {
     const api = Router();
 
-    api.post("/", handleImgUpload, async (req, res) => {
+    api.post("/", async (req, res) => {
         try {
             const body = req.body;
-            body.file = req.filePaths;
             const { ok, payLoad, message } = await userController.registerUser(body);
             if (ok) {
                 res.status(201).json({ ok, payLoad });
+            } else {
+                res.status(500).json({ ok, message });
+            }
+        } catch (error) {
+            res.status(500).json({ ok: false, message: error.message });
+        }
+    });
+
+    api.put("/onboard/:id", handleImgUpload, async (req, res) => {
+        try {
+            const { id } = req.params
+            const body = req.body;
+            body.file = req.filePaths;
+            const { ok, payLoad, message } = await userController.onBoardUser(id, body);
+            console.log({ ok, payLoad, message });
+            
+            if (ok) {
+                res.status(201).json({ ok, payLoad,message });
             } else {
                 res.status(500).json({ ok, message });
             }

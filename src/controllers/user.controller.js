@@ -26,6 +26,34 @@ class UserController {
         }
     }
 
+    async onBoardUser(id, data) {
+        try {
+            console.log("dao1");
+            const user = await userModel.updateOne({ "_id": id },
+                {
+                    $set: {
+                        phoneNumber: data.phone,
+                        stateOrCity: data.city,
+                        photo: data.photo,
+                        sports: data.sports,
+                        socials: data.socialLinks,
+                        countryOfResidence: data.country,
+                        fieldOfStudy: data.fieldOfStudy,
+                        profession: data.profession,
+                        businessVentures: data.businessVentures
+                    }
+                },
+                { new: true });
+            if (user) {
+                return { ok: true, payLoad: user, message: "User onboarded successfully" };
+            } else {
+                return { ok: false, message: "User not found" };
+            }
+        } catch (error) {
+            return { ok: false, message: error.message };
+        }
+    }
+
     async loginUser({ email, password }) {
         try {
             let user = await userModel.findOne({ email: email });
