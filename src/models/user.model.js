@@ -12,6 +12,7 @@ const userSchema = new Schema({
         type: String,
         enum: ["Pending", "Active", "Disabled"], default: "Pending"
     },
+    registrationStatus: { type: String, enum: ["incomplete", "complete"], default: "incomplete" },
     chapter: { type: mongoose.Types.ObjectId, ref: "Chapter" },
     class: { type: mongoose.Schema.Types.ObjectId, ref: "Class" },
     dob: { type: Date },
@@ -43,12 +44,12 @@ userSchema.pre('save', function (next) {
 });
 
 userSchema.pre("save", async function (next) {
-    if(!this.isModified('password')){
+    if (!this.isModified('password')) {
         next();
     }
     const salt = await bcrypt.genSalt();
-    this.password =await bcrypt.hash(this.password, salt);
-   
+    this.password = await bcrypt.hash(this.password, salt);
+
 })
 
 userSchema.methods.isValidPassword = async function (password) {

@@ -28,7 +28,6 @@ class UserController {
 
     async onBoardUser(id, data) {
         try {
-            console.log("dao1");
             const user = await userModel.updateOne({ "_id": id },
                 {
                     $set: {
@@ -40,7 +39,8 @@ class UserController {
                         countryOfResidence: data.country,
                         fieldOfStudy: data.fieldOfStudy,
                         profession: data.profession,
-                        businessVentures: data.businessVentures
+                        businessVentures: data.businessVentures,
+                        registrationStatus:"registrationStatus"
                     }
                 },
                 { new: true });
